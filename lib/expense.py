@@ -1,51 +1,68 @@
 import sqlite3
 
-CONN = sqlite3.connect("database.db")
-CURSOR = CONN.cursor()
+EXPENSE_CATEGORIES = ["Food", "Clothes", "Travel", "Utilities", "Rent", "Misc.", "Bills"]
 
-class Expense():
-    def __init__(self, name, category, price):
-        self.id = None
-        self.name = name
-        self.category = category
-        self.price = price
+class Expense:
+    @staticmethod
+    def create(name, category, price):
+        # Connect to the database
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
 
-    def save(self):
-        sql = """
-            INSERT INTO expenses (name, category, price)
-            VALUES ( ?, ?, ?)
-        """
-        CURSOR.execute(sql, (self.name, self.category, self.price))
-        CONN.commit()
+        # Insert a new expense into the 'expenses' table
+        cursor.execute("INSERT INTO expenses (name, category, price) VALUES (?, ?, ?)", (name, category, price))
 
-        self.id = CURSOR.execute("SELECT last_insert_rowid() FROM expenses").fetchone()[0]
+        # Commit the changes and close the connection
+        conn.commit()
+        conn.close()
 
-    @classmethod
-    def create(cls, name, category, price):
-        expense = Expense(name, category, price)
-        expense.save()
-        return expense
-    
-    @classmethod
-    def display(cls, row):
-        expense = cls(
-            name = row[1],
-            category=row[2],
-            price=row[3]
-        )
-        return expense
-    
-    ##not working yet
-    @classmethod
-    def find_by_category(cls, category):
-        sql = """
-            SELECT * FROM expenses
-            WHERE category = ?
-        """
+    @staticmethod
+    def find_by_category(category):
+        # Connect to the database
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
 
-        rows = CURSOR.execute(sql, (category,)).fetchall()
+        # Select all expenses with the provided category
+        cursor.execute("SELECT * FROM expenses WHERE category = ?", (category,))
 
-        print("working so far")
-        
-        return [cls.display(row) for row in rows]
-    
+        # Fetch all the matching records
+        rows = cursor.fetchall()
+
+        # Close the connection
+        conn.close()
+
+        # Return the fetched records
+        return rows
+
+    @staticmethod
+    def delete(name, category):
+        # Connect to the database
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+
+        # Delete the expense with the provided name and category
+        cursor.execute("DELETE FROM expenses WHERE name = ? AND category = ?", (name, category))
+
+        # Commit the changes and close the connection
+        conn.commit()
+        conn.close()
+    @staticmethod
+    def total():
+        for category in EXPENSE_CATEGORIES:
+            # Connect to the database
+            conn = sqlite3.connect("database.db")
+            cursor = conn.cursor()
+
+            # Delete the expense with the provided name and category
+            cursor.execute("SELECT SUM(price) FROM expenses WHERE category = ?", (category,))
+            row = cursor.fetchone()
+
+            if row[0] == None:
+                print(f"You don't have any expenses in {category}")
+            else:
+                print(f"The Total Expense in {category} is {row[0]}")
+
+            # Commit the changes and close the connection
+            conn.commit()
+            conn.close()
+
