@@ -16,7 +16,6 @@ def total_earnings():
     
     cursor.execute("SELECT SUM(amount) FROM earnings")
     total = cursor.fetchone()[0]
-
     conn.close()
 
     return total if total else 0
@@ -26,6 +25,6 @@ def compare():
     earnings = total_earnings()
 
     if expenses > earnings:
-        return f"Warning! Your expenses exceed your earnings. {earnings - expenses} "
+        return f"Uh oh! Your expenses exceed your earnings. {earnings - expenses} Time to start saving!"
     else:
-        return f"You have saved {earnings - expenses} this period."
+        return f"You have saved ${earnings - expenses} this period. Nice!"

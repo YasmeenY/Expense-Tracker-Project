@@ -1,27 +1,25 @@
 import sqlite3
 
-# Establish a connection to the SQLite database
 CONN = sqlite3.connect("database.db")
 CURSOR = CONN.cursor()
 
-# Create 'expenses' table if it doesn't exist
 CURSOR.execute("""
     CREATE TABLE IF NOT EXISTS expenses
     (id INTEGER PRIMARY KEY,
     name TEXT,
     category TEXT,
-    price REAL)
+    price REAL,
+    date TEXT)
 """)
 
-# Create 'earnings' table if it doesn't exist
 CURSOR.execute("""
     CREATE TABLE IF NOT EXISTS earnings
     (id INTEGER PRIMARY KEY,
-    name TEXT,
+    source TEXT,
     category TEXT,
-    amount REAL)
+    amount REAL,
+    date TEXT)
 """)
 
-# Commit the changes and close the connection
 CONN.commit()
 CONN.close()

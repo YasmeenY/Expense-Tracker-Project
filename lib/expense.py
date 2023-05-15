@@ -1,46 +1,52 @@
 import sqlite3
 
 class Expense:
-    @staticmethod
-    def create(name, category, price):
-        # Connect to the database
+    @classmethod
+    def create(cls, name, category, price, date):
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
-
-        # Insert a new expense into the 'expenses' table
-        cursor.execute("INSERT INTO expenses (name, category, price) VALUES (?, ?, ?)", (name, category, price))
-
-        # Commit the changes and close the connection
+        cursor.execute("INSERT INTO expenses (name, category, price, date) VALUES (?, ?, ?, ?)", (name, category, price, date))
         conn.commit()
         conn.close()
 
-    @staticmethod
-    def find_by_category(category):
-        # Connect to the database
+    @classmethod
+    def find_by_date(cls, start_date, end_date):
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
+        cursor.execute("SELECT * FROM expenses WHERE date BETWEEN ? AND ?", (start_date, end_date))
+        expenses = cursor.fetchall()
+        conn.close()
+        return expenses
 
-        # Select all expenses with the provided category
+    @classmethod
+    def remove(cls, id):
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM expenses WHERE id = ?", (id,))
+        conn.commit()
+        conn.close()
+
+    @classmethod
+    def view_total_expenses(cls):
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT category, SUM(price) FROM expenses GROUP BY category")
+        expenses = cursor.fetchall()
+        conn.close()
+        for category, total in expenses:
+            print(f"{category}: {total}")
+
+    @classmethod
+    def view_expense_by_category(cls, category):
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
         cursor.execute("SELECT * FROM expenses WHERE category = ?", (category,))
-
-        # Fetch all the matching records
-        rows = cursor.fetchall()
-
-        # Close the connection
+        expenses = cursor.fetchall()
         conn.close()
+        if expenses:
+            print(f"Expenses in the {category} category:")
+            for expense in expenses:
+                print(f"ID: {expense[0]}, Name: {expense[1]}, Price: {expense[3]}, Date: {expense[4]}")
+        else:
+            print(f"No expenses found in the {category} category.")
 
-        # Return the fetched records
-        return rows
-
-    @staticmethod
-    def delete(name, category):
-        # Connect to the database
-        conn = sqlite3.connect("database.db")
-        cursor = conn.cursor()
-
-        # Delete the expense with the provided name and category
-        cursor.execute("DELETE FROM expenses WHERE name = ? AND category = ?", (name, category))
-
-        # Commit the changes and close the connection
-        conn.commit()
-        conn.close()
