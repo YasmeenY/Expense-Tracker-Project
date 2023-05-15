@@ -12,13 +12,5 @@ CURSOR.execute("""
     price REAL)
 """)
 
-CURSOR.execute("""
-    CREATE TABLE IF NOT EXISTS earnings
-    (id INTEGER PRIMARY KEY,
-    name TEXT,
-    category TEXT,
-    amount REAL)
-""")
-
 CONN.commit()
 CONN.close()
