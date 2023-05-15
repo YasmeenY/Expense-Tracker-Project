@@ -26,22 +26,26 @@ class Expense():
         expense.save()
         return expense
     
+    @classmethod
+    def display(cls, row):
+        expense = cls(
+            name = row[1],
+            category=row[2],
+            price=row[3]
+        )
+        return expense
+    
     ##not working yet
     @classmethod
     def find_by_category(cls, category):
         sql = """
             SELECT * FROM expenses
             WHERE category = ?
-            LIMIT 1
         """
 
-        rows = CURSOR.execute(sql, (category,)).fetchmany(2)
+        rows = CURSOR.execute(sql, (category,)).fetchall()
+
+        print("working so far")
         
-        for row in rows:
-            return Expense(
-                name=row[1],
-                category=row[2],
-                price =row[3],
-            )
-        if not row:
-            return None
+        return [cls.display(row) for row in rows]
+    
