@@ -22,7 +22,7 @@ while True:
             print("1. View Total Expenses in each category")
             print("2. Add New Expense")
             print("3. Remove Expense")
-            print("View Total expenses in each category")
+            print("4. View Total expenses in each category")
 
             expense_choice = int(input("Pick a Number:"))
 
@@ -48,7 +48,7 @@ while True:
             print("1. View Total Earnings in each category")
             print("2. Add New Earning")
             print("3. Remove Earning")
-            print("View Total expenses in each category")
+            print("4. View Total earnings in each category")
 
             earning_choice = int(input("Pick a Number:"))
 
@@ -64,6 +64,8 @@ while True:
                 name = input("What earning do you want to remove: ")
                 category = input("What category was it ? Passive Income, Salary, Freelance, Gifts ? ")
                 Earnings.delete(name, category)
+            elif earning_choice == 4:
+                Earnings.total()
             else:
                 print("Invalid Choice Exit")
                 exit()

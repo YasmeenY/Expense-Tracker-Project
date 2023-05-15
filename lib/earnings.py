@@ -54,7 +54,7 @@ class Earnings:
             cursor = conn.cursor()
 
             # Delete the expense with the provided name and category
-            cursor.execute("SELECT SUM(price) FROM expenses WHERE category = ?", (category,))
+            cursor.execute("SELECT SUM(amount) FROM earnings WHERE category = ?", (category,))
             row = cursor.fetchone()
             if row[0] == None:
                 print(f"You Haven't earned anything in {category}")
