@@ -27,16 +27,6 @@ class Earnings:
         conn.close()
 
     @classmethod
-    def view_total_earnings(cls):
-        conn = sqlite3.connect("database.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT category, SUM(amount) FROM earnings GROUP BY category")
-        earnings = cursor.fetchall()
-        conn.close()
-        for category, total in earnings:
-            print(f"{category}: {total}")
-
-    @classmethod
     def view_earnings_by_category(cls, category):
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
@@ -49,3 +39,32 @@ class Earnings:
                 print(f"ID: {earning[0]}, Source: {earning[1]}, Amount: {earning[3]}, Date: {earning[4]}")
         else:
             print(f"No earnings found in the {category} category.")
+     
+    @classmethod
+    def find_user_categories(cls, user_id):
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+        sql = """
+            SELECT category from expenses WHERE user_id = ?
+        """
+        cursor.execute(sql, (user_id,))
+        expenses = cursor.fetchall()
+        conn.close()
+        categories = []
+        for row in expenses:
+            categories.append(row[0])
+        return set(categories)
+    
+    @classmethod
+    def view_total_expenses(cls, user_id):
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+        for category in Expense.find_user_categories(user_id):
+            sql = """
+                SELECT SUM(price) FROM expenses WHERE category = ? AND user_id = ?
+            """
+            cursor.execute(sql, (category, user_id))
+            row = cursor.fetchone()
+            print(f"The Total Expense in {category} is {row[0]}")
+        conn.close()
+        return ""
