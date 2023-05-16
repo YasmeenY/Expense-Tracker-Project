@@ -74,4 +74,3 @@ class Expense:
         conn.close()
         return ""
 
-
