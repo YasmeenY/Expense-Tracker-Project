@@ -16,7 +16,12 @@ class Earnings:
         cursor.execute("SELECT * FROM earnings WHERE date BETWEEN ? AND ? AND user_id = ?", (start_date, end_date, user_id))
         earnings = cursor.fetchall()
         conn.close()
-        return earnings
+        if earnings:
+            for earning in earnings:
+                print(f"ID: {earning[0]}, Source: {earning[1]}, Amount: ${earning[3]}, Date: {earning[4]}")
+            return ""
+        else:
+            return (f"\nNo earnings found between {start_date} and {end_date}.")
 
     @classmethod
     def remove(cls, id):
@@ -36,7 +41,7 @@ class Earnings:
         if earnings:
             print(f"Earnings in the {category} category:")
             for earning in earnings:
-                print(f"ID: {earning[0]}, Source: {earning[1]}, Amount: {earning[3]}, Date: {earning[4]}")
+                print(f"ID: {earning[0]}, Source: {earning[1]}, Amount: ${earning[3]}, Date: {earning[4]}")
         else:
             print(f"No earnings found in the {category} category.")
 
@@ -64,6 +69,6 @@ class Earnings:
             """
             cursor.execute(sql, (category, user_id))
             row = cursor.fetchone()
-            print(f"The Total Earnings in {category} is {row[0]}")
+            print(f"The Total Earnings in {category} is ${row[0]}")
         conn.close()
         return ""

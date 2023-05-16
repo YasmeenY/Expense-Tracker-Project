@@ -16,7 +16,12 @@ class Expense:
         cursor.execute("SELECT * FROM expenses WHERE date BETWEEN ? AND ? AND user_id = ?", (start_date, end_date, user_id))
         expenses = cursor.fetchall()
         conn.close()
-        return expenses
+        if expenses:
+            for expense in expenses:
+                print(f"ID: {expense[0]}, Name: {expense[1]}, Price: ${expense[3]}, Date: {expense[4]}")
+            return ""
+        else:
+            return (f"\nNo expenses found between {start_date} and {end_date}.")
 
     @classmethod
     def remove(cls, id):
@@ -34,11 +39,11 @@ class Expense:
         expenses = cursor.fetchall()
         conn.close()
         if expenses:
-            print(f"Expenses in the {category} category:")
+            print(f"\nExpenses in the {category} category:\n")
             for expense in expenses:
-                print(f"ID: {expense[0]}, Name: {expense[1]}, Price: {expense[3]}, Date: {expense[4]}")
+                print(f"ID: {expense[0]}, Name: {expense[1]}, Price: ${expense[3]}, Date: {expense[4]}")
         else:
-            print(f"No expenses found in the {category} category.")
+            print(f"\nNo expenses found in the {category} category.\n")
 
     @classmethod
     def find_user_categories(cls, user_id):
@@ -65,7 +70,7 @@ class Expense:
             """
             cursor.execute(sql, (category, user_id))
             row = cursor.fetchone()
-            print(f"The Total Expense in {category} is {row[0]}")
+            print(f"The Total Expense in {category} is ${row[0]}")
         conn.close()
         return ""
 
