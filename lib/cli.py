@@ -4,20 +4,29 @@ from earnings import Earnings
 from users import Users
 from compare import compare
 from compare import warn_user
-import sqlite3
 import getpass
 
+#checks if it is in proper date time format
 def valid_date(date):
     try:
         datetime.datetime.strptime(date, "%Y-%m-%d")
         return True
     except ValueError:
         return False
+    
 
-CONN = sqlite3.connect("database.db")
-CURSOR = CONN.cursor()
+# Ask the user if they want to continue or exit the program
+def exit_or_continue():
+    if choice == 4:
+        return
 
+    continue_choice = int(input("\n\033[91mWould you like to do something else ? Press 0 to exit or press any other button to return to main menu. \033[00m"))
 
+    if continue_choice == 0:
+        print("\033[95mExiting the program. Goodbye! \033[00m")
+        exit()
+
+##asks for user information
 def user_sign_in():
     first_name = input("\033[94mEnter Your first name: \033[00m").lower().capitalize()
     last_name = input("\033[94mEnter Your last name: \033[00m").lower().capitalize()
@@ -33,13 +42,14 @@ def user_sign_in():
                 print("\033[91mSorry Password wrong 3 times Goodbye!\033[00m")
                 exit()
         
-    print(f"\n\n\U0001F973\033[95m Hello {first_name} what would you like to do today? \U0001F973\n\033[00m")
+    print(f"\n\n\033[95m\U0001F973 Hello {first_name} what would you like to do today?\U0001F973\n\033[00m")
 
     global user_id
     user_id = Users.get_id(first_name, last_name)
 
 user_sign_in()
 
+#beginning of cli loop
 while True:
     try:
         print("\nSelect an option:")
@@ -51,6 +61,7 @@ while True:
 
         choice = int(input("\033[94mPick a Number: \033[00m"))
 
+        #view add or remove expenses
         if choice == 1:
             print("\n\n\033[91m1. View Total Expenses in each category")
             print("2. Add New Expense")
@@ -62,7 +73,9 @@ while True:
 
             while expense_choice != 1 and expense_choice != 2 and expense_choice != 3 and expense_choice != 4:
                 expense_choice = int(input("\033[94mInvalid choice please choose again: \033[00m"))
+                print("\n")
 
+            #View total expenses and gets choice to view each item in a specific category
             if expense_choice == 1:
                 Expense.view_total_expenses(user_id)
                 view_specific = input("\n\033[94mWould you like to see the total expense of specific category? Y/N. \033[00m")
@@ -70,19 +83,7 @@ while True:
                     category = input("\n\033[94mEnter the category: \033[00m").lower().capitalize()
                     Expense.view_expense_by_category(category, user_id)
 
-                # Ask the user if they want to continue or exit the program
-                continue_choice = int(input("\n\033[91mWould you like to do something else? Pick 1 to return to the main menu or 0 to exit: \033[00m"))
-
-                while continue_choice != 1 and continue_choice != 0:
-                    continue_choice = int(input("\033[94mInvalid choice please choose again: \033[00m"))
-
-                if continue_choice == 1:
-                    continue
-                elif continue_choice == 0:
-                    print("\033[95mExiting the program. Goodbye! \033[00m")
-                    break
-
-
+            #for adding a new expense
             elif expense_choice == 2:
                 name = input("\033[94mWhat did you buy: \033[00m")
                 print("\033[94mWhat category was it ?\033[00m")
@@ -110,6 +111,8 @@ while True:
                     date = input("\n\033[94mEnter the date of the transaction (YYYY-MM-DD): \033[00m")
                 Expense.create(name, category, price, date, user_id)
                 print("\n" + warn_user(user_id))
+
+            #View expenses by date
             elif expense_choice == 3:
                 start_date = input("\033[94mEnter the start date (YYYY-MM-DD): \033[00m")
                 while not valid_date(start_date):
@@ -122,42 +125,35 @@ while True:
                 expenses = Expense.find_by_date(start_date, end_date, user_id)
                 print("\n")
                 print(expenses)
+            #Removing an expense by id
             elif expense_choice == 4:
-                id = int(input("\033[94mEnter the id of the expense to remove: \033[00m"))
+                category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
+                Expense.view_expense_by_category(category, user_id)
+                id = int(input("\n\033[94mEnter the id of the expense to remove: \033[00m"))
                 Expense.remove(id)
 
-            # Ask the user if they want to continue or exit the program
-            continue_choice = int(input("\n\033[91mWould you like to do something else? Pick 1 to return to the main menu or 0 to exit: \033[00m"))
-
-            while continue_choice != 1 and continue_choice != 0:
-                continue_choice = int(input("\033[94mInvalid choice please choose again: \033[00m"))
-
-            if continue_choice == 1:
-                continue
-            elif continue_choice == 0:
-                print("\033[95mExiting the program. Goodbye! \033[00m")
-                break
-
+        #view add or remove earnings
         elif choice == 2:
             print("\n\n\033[92m1. View Total Earnings in each category")
             print("2. Add New Earning")
             print("3. View Earnings By Date")
-            print("4. Remove Earning\033[00m")
-            print("\033[93m4. Change User\033[00m")
-            print("\033[93m5. Exit\n\033[00m")
+            print("4. Remove Earning\033[00m\n")
+
 
             earning_choice = int(input("\033[94mPick a Number: \033[00m"))
             print("\n")
-            while earning_choice != 1 and expense_choice != 2 and expense_choice != 3 and expense_choice != 4:
+            while earning_choice != 1 and earning_choice != 2 and earning_choice != 3 and earning_choice != 4:
                 earning_choice = int(input("\033[94mInvalid choice please choose again: \033[00m"))
 
+            #View total earnings gets choice to view each item in a specific category
             if earning_choice == 1:
                 Earnings.view_total_earnings(user_id)
                 view_specific = input("\033[94mWould you like to see the total earnings of a specific category? Y/N. \033[00m")
                 if view_specific.lower() == 'y':
                     category = input("\033[94mEnter the category: \033[00m").lower().capitalize()
-                    Earnings.view_earnings_by_category(category, user_id)
-                continue
+                    Earnings.view_earnings_by_category(category, user_id)            
+
+            #for adding a new earning
             elif earning_choice == 2:
                 source = input("\033[94mWhat was the source of the earning: \033[00m")
                 print("\033[94mWhat category was it ?")
@@ -184,6 +180,8 @@ while True:
                     print("\033[93mInvalid date. Please try again.\033[00m")
                     continue
                 Earnings.create(source, category, amount, date, user_id)
+            
+            #for view earnings by date
             elif earning_choice == 3:
                 start_date = input("\033[94mEnter the start date (YYYY-MM-DD): \033[00m")
                 while not valid_date(start_date):
@@ -196,28 +194,21 @@ while True:
                 earnings = Earnings.find_by_date(start_date, end_date, user_id)
                 print("\n")
                 print(earnings)
+            #remove earning by id
             elif earning_choice == 4:
-                id = int(input("\033[94mEnter the id of the earning to remove: \033[00m"))
+                category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
+                Expense.view_expense_by_category(category, user_id)
+                id = int(input("\n\033[94mEnter the id of the earning to remove: \033[00m"))
                 Earnings.remove(id)
-            
-            # Ask the user if they want to continue or exit the program
-            continue_choice = int(input("\n\033[91mWould you like to do something else? Pick 1 to return to the main menu or 0 to exit: \033[00m"))
 
-            while continue_choice != 1 and continue_choice != 0:
-                continue_choice = int(input("\033[94mInvalid choice please choose again: \033[00m"))
-
-            if continue_choice == 1:
-                continue
-            elif continue_choice == 0:
-                print("\033[95mExiting the program. Goodbye! \033[00m")
-                break
-
-
+        #compare between earnings and expenses
         elif choice == 3:
             print(compare(user_id))
+        #change user
         elif choice == 4:
             print("\n\n\n\033[92m---Changing User---\033[00m\n")
             user_sign_in()
+        #exit cli
         elif choice == 5:
             print("\033[95mExiting now Goodbye! \033[00m")
             exit()
@@ -225,19 +216,8 @@ while True:
             print("\033[94mInvalid choice please choose again: \033[00m")
             continue
 
-        # Ask the user if they want to continue or exit the program
-        continue_choice = int(input("\n\033[91mWould you like to do something else? Pick 1 to return to the main menu or 0 to exit: \033[00m"))
-        while continue_choice != 1 and continue_choice != 0:
-            continue_choice = int(input("\033[94mInvalid choice please choose again: \033[00m"))
-        if continue_choice == 1:
-            continue
-        elif continue_choice == 0:
-            print("\033[95mExiting the program. Goodbye! \033[00m")
-            break
+        #asks user if they want to got to main menu or exit after each completed operation
+        exit_or_continue()
 
     except ValueError:
-        print("\033[94mInvalid choice please choose again: \033[00m")
-        continue
-
-CONN.close()
-
+        choice = input("\033[94mInvalid number please pick a valid number or return to main menu: \033[00m")
