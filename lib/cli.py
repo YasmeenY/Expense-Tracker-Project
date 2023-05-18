@@ -32,7 +32,7 @@ def exit_or_continue():
 
     continue_choice = input("\n\033[91mWould you like to do something else ? Press 0 to exit or press any other button to return to main menu. \033[00m")
 
-    if continue_choice == 0:
+    if continue_choice == "0":
         print("\033[95mExiting the program. Goodbye! \033[00m")
         exit()
 
@@ -233,8 +233,8 @@ while True:
             user_sign_in()
         #deletes user
         elif choice == 5:
-            confirm = input("\033[91mAre you sure you wish to delete the user press 0 to confirm deletion or any other button to return to main menu: ")
-            if confirm == "0":
+            confirm_choice = input("\033[91mAre you sure you wish to delete the user press 0 to confirm deletion or any other button to return to main menu: ")
+            if confirm_choice == "0":
                 Users.delete_user(user_id)
                 print("Deleting user... \U0001F641")
                 print("Exiting now...\033[00m")
