@@ -233,12 +233,14 @@ while True:
             user_sign_in()
         #deletes user
         elif choice == 5:
-            confirm_choice = ("\033[91mAre you sure you wish to delete the user press 0 to confirm deletion or any other button to return to main menu: ")
-            if confirm_choice == 0:
+            confirm = input("\033[91mAre you sure you wish to delete the user press 0 to confirm deletion or any other button to return to main menu: ")
+            if confirm == "0":
                 Users.delete_user(user_id)
                 print("Deleting user... \U0001F641")
                 print("Exiting now...\033[00m")
                 exit()
+            else:
+                continue
         #exit cli
         elif choice == 6:
             print("\033[95mExiting now Goodbye! \033[00m")
