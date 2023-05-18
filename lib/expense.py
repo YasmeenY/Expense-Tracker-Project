@@ -1,4 +1,5 @@
 import sqlite3
+from beautifultable import BeautifulTable
 
 class Expense:
     @classmethod
@@ -16,10 +17,12 @@ class Expense:
         cursor.execute("SELECT * FROM expenses WHERE date BETWEEN ? AND ? AND user_id = ?", (start_date, end_date, user_id))
         expenses = cursor.fetchall()
         conn.close()
+        table = BeautifulTable()
+        table.columns.header = ["ID", "Name", "Price", "Date"]
         if expenses:
             for expense in expenses:
-                print(f"ID: {expense[0]}, Name: {expense[1]}, Price: ${expense[3]}, Date: {expense[4]}")
-            return ""
+                table.rows.append([expense[0], expense[1], f"${expense[3]}", expense[4]])
+            return table
         else:
             return (f"\nNo expenses found between {start_date} and {end_date}.")
 
@@ -38,10 +41,13 @@ class Expense:
         cursor.execute("SELECT * FROM expenses WHERE category = ? AND user_id = ?", (category,user_id))
         expenses = cursor.fetchall()
         conn.close()
+        table = BeautifulTable()
+        table.columns.header = ["ID", "Name", "Price", "Date"]
         if expenses:
-            print(f"\nExpenses in the {category} category:\n")
+            print(f"Expenses in the {category} category:")
             for expense in expenses:
-                print(f"ID: {expense[0]}, Name: {expense[1]}, Price: ${expense[3]}, Date: {expense[4]}")
+                table.rows.append([expense[0], expense[1], f"${expense[3]}", expense[4]])
+            return table
         else:
             print(f"\nNo expenses found in the {category} category.\n")
 

@@ -14,13 +14,23 @@ def valid_date(date):
     except ValueError:
         return False
     
+def display_category(current_category):
+    if current_category != [] and len(current_category) != 1:
+        print ('\033[94mYour current categories are '+', '.join(current_category[:-1]) + ' & ' + current_category[-1] + "\033[00m")
+    elif len(current_category) == 2:
+        print ('\033[94mYour current categories are '+ " & ".join(current_category) + "\033[00m")
+    elif len(current_category) == 1:
+        print("\033[94m" + "".join(current_category) + "\033[00m")
+    else:
+        print("\033[94mYou currently have no categories\033[00m")
+    
 
 # Ask the user if they want to continue or exit the program
 def exit_or_continue():
     if choice == 4:
         return
 
-    continue_choice = int(input("\n\033[91mWould you like to do something else ? Press 0 to exit or press any other button to return to main menu. \033[00m"))
+    continue_choice = input("\n\033[91mWould you like to do something else ? Press 0 to exit or press any other button to return to main menu. \033[00m")
 
     if continue_choice == 0:
         print("\033[95mExiting the program. Goodbye! \033[00m")
@@ -30,22 +40,28 @@ def exit_or_continue():
 def user_sign_in():
     first_name = input("\033[94mEnter Your first name: \033[00m").lower().capitalize()
     last_name = input("\033[94mEnter Your last name: \033[00m").lower().capitalize()
-    password = getpass.getpass("\033[94mEnter password: \033[00m")
-    Users.create(first_name,last_name, password)
-    password_check = Users.get_password(first_name, last_name)
-    count = 1
-    while password != password_check:
-            if count != 3:
-                count +=1
-                password = getpass.getpass("\033[93mIncorrect password please try again: \033[00m")
-            else:
-                print("\033[91mSorry Password wrong 3 times Goodbye!\033[00m")
-                exit()
-        
-    print(f"\n\n\033[95m\U0001F973 Hello {first_name} what would you like to do today?\U0001F973\n\033[00m")
+    user_exist = Users.check_if_user_exists(first_name, last_name)
+    if user_exist == False:
+        print("\033[95mUser doesn't exist creating new user...\033[00m")
+        password = getpass.getpass("\033[94mEnter New password: \033[00m")
+        Users.create(first_name, last_name, password)
+    else:
+        password = getpass.getpass("\033[94mEnter password: \033[00m")
+        password_check = Users.get_password(first_name, last_name)
+        count = 1
+        while password != password_check:
+                if count != 3:
+                    count +=1
+                    password = getpass.getpass("\033[93mIncorrect password please try again: \033[00m")
+                else:
+                    print("\033[91mSorry Password wrong 3 times Goodbye!\033[00m")
+                    exit()
+            
+        print(f"\n\n\033[95m\U0001F973 Hello {first_name} what would you like to do today?\U0001F973\n\033[00m")
 
     global user_id
-    user_id = Users.get_id(first_name, last_name)
+    user_id = Users.get_id(first_name, last_name)[0]
+
 
 user_sign_in()
 
@@ -57,7 +73,8 @@ while True:
         print("\033[92m2. Earnings\033[00m")
         print("\033[93m3. Compare Earnings and Expenses\033[00m")
         print("\033[95m4. Change User\033[00m")
-        print("\033[90m5. Exit\n\033[00m")
+        print("\033[91m5. Delete user\033[00m")
+        print("\033[90m6. Exit\n\033[00m")
 
         choice = int(input("\033[94mPick a Number: \033[00m"))
 
@@ -81,21 +98,16 @@ while True:
                 view_specific = input("\n\033[94mWould you like to see the total expense of specific category? Y/N. \033[00m")
                 if view_specific.lower() == 'y':
                     category = input("\n\033[94mEnter the category: \033[00m").lower().capitalize()
-                    Expense.view_expense_by_category(category, user_id)
+                    expenses = Expense.view_expense_by_category(category, user_id)
+                    print("\n")
+                    print(expenses)
 
             #for adding a new expense
             elif expense_choice == 2:
                 name = input("\033[94mWhat did you buy: \033[00m")
                 print("\033[94mWhat category was it ?\033[00m")
                 current_category = list(Expense.find_user_categories(user_id))
-                if current_category != [] and len(current_category) != 1:
-                    print ('\033[94mYour current categories are '+', '.join(current_category[:-1]) + ' & ' + current_category[-1] + "\033[00m")
-                elif len(current_category) == 2:
-                    print ('\033[94mYour current categories are '+ " & ".join(current_category) + "\033[00m")
-                elif len(current_category) == 1:
-                    print("\033[94m" + "".join(current_category) + "\033[00m")
-                else:
-                    print("\033[94mYou currently have no categories\033[00m")
+                display_category(current_category)
                 category = input("\n\033[94mItem category: \033[00m").lower().capitalize()
                 while True:
                     try:
@@ -127,8 +139,12 @@ while True:
                 print(expenses)
             #Removing an expense by id
             elif expense_choice == 4:
+                current_category = list(Expense.find_user_categories(user_id))
+                display_category(current_category)
                 category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
-                Expense.view_expense_by_category(category, user_id)
+                expenses = Expense.view_expense_by_category(category, user_id)
+                print("\n")
+                print(expenses)
                 id = int(input("\n\033[94mEnter the id of the expense to remove: \033[00m"))
                 Expense.remove(id)
 
@@ -148,16 +164,19 @@ while True:
             #View total earnings gets choice to view each item in a specific category
             if earning_choice == 1:
                 Earnings.view_total_earnings(user_id)
-                view_specific = input("\033[94mWould you like to see the total earnings of a specific category? Y/N. \033[00m")
+                view_specific = input("\n\033[94mWould you like to see the total earnings of a specific category? Y/N. \033[00m")
                 if view_specific.lower() == 'y':
                     category = input("\033[94mEnter the category: \033[00m").lower().capitalize()
-                    Earnings.view_earnings_by_category(category, user_id)            
+                    earnings = Earnings.view_earnings_by_category(category, user_id)   
+                    print("\n")
+                    print(earnings)         
 
             #for adding a new earning
             elif earning_choice == 2:
                 source = input("\033[94mWhat was the source of the earning: \033[00m")
                 print("\033[94mWhat category was it ?")
                 current_category = list(Earnings.find_user_categories(user_id))
+                display_category(current_category)
                 if current_category != [] and len(current_category) != 1:
                     print ('\033[94mYour current categories are '+', '.join(current_category[:-1]) + ' & ' + current_category[-1] + "\033[00m")
                 elif len(current_category) == 2:
@@ -196,8 +215,12 @@ while True:
                 print(earnings)
             #remove earning by id
             elif earning_choice == 4:
+                current_category = list(Earnings.find_user_categories(user_id))
+                display_category(current_category)
                 category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
-                Expense.view_expense_by_category(category, user_id)
+                earnings = Earnings.view_earnings_by_category(category, user_id)   
+                print("\n")
+                print(earnings)  
                 id = int(input("\n\033[94mEnter the id of the earning to remove: \033[00m"))
                 Earnings.remove(id)
 
@@ -208,8 +231,16 @@ while True:
         elif choice == 4:
             print("\n\n\n\033[92m---Changing User---\033[00m\n")
             user_sign_in()
-        #exit cli
+        #deletes user
         elif choice == 5:
+            confirm_choice = ("\033[91mAre you sure you wish to delete the user press 0 to confirm deletion or any other button to return to main menu: ")
+            if confirm_choice == 0:
+                Users.delete_user(user_id)
+                print("Deleting user... \U0001F641")
+                print("Exiting now...\033[00m")
+                exit()
+        #exit cli
+        elif choice == 6:
             print("\033[95mExiting now Goodbye! \033[00m")
             exit()
         else:

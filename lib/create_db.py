@@ -31,7 +31,8 @@ CURSOR.execute("""
     (id INTEGER PRIMARY KEY,
     first_name TEXT,
     last_name TEXT,
-    password TEXT)
+    password TEXT,
+    UNIQUE(first_name, last_name))
 """)
 
 CONN.commit()

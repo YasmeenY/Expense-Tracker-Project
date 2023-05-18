@@ -1,4 +1,5 @@
 import sqlite3
+from beautifultable import BeautifulTable
 
 class Earnings:
     @classmethod
@@ -16,10 +17,12 @@ class Earnings:
         cursor.execute("SELECT * FROM earnings WHERE date BETWEEN ? AND ? AND user_id = ?", (start_date, end_date, user_id))
         earnings = cursor.fetchall()
         conn.close()
+        table = BeautifulTable()
+        table.columns.header = ["ID", "Source", "Amount", "Date"]
         if earnings:
             for earning in earnings:
-                print(f"ID: {earning[0]}, Source: {earning[1]}, Amount: ${earning[3]}, Date: {earning[4]}")
-            return ""
+                table.rows.append([earning[0], earning[1], f"${earning[3]}", earning[4]])
+            return table
         else:
             return (f"\nNo earnings found between {start_date} and {end_date}.")
 
@@ -38,10 +41,13 @@ class Earnings:
         cursor.execute("SELECT * FROM earnings WHERE category = ? AND user_id = ?", (category,user_id))
         earnings = cursor.fetchall()
         conn.close()
+        table = BeautifulTable()
+        table.columns.header = ["ID", "Source", "Amount", "Date"]
         if earnings:
             print(f"Earnings in the {category} category:")
             for earning in earnings:
-                print(f"ID: {earning[0]}, Source: {earning[1]}, Amount: ${earning[3]}, Date: {earning[4]}")
+                table.rows.append([earning[0], earning[1], f"${earning[3]}", earning[4]])
+            return table
         else:
             print(f"No earnings found in the {category} category.")
 
