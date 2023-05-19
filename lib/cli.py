@@ -13,7 +13,12 @@ def valid_date(date):
         return True
     except ValueError:
         return False
-    
+def valid_string(name):
+    if len(name) >= 1:
+        return True
+    else:
+        return False
+
 def display_category(current_category):
     if current_category != [] and len(current_category) != 1:
         print ('\033[94mYour current categories are '+', '.join(current_category[:-1]) + ' & ' + current_category[-1] + "\033[00m")
@@ -98,6 +103,9 @@ while True:
                 view_specific = input("\n\033[94mWould you like to see the total expense of specific category? Y/N. \033[00m")
                 if view_specific.lower() == 'y':
                     category = input("\n\033[94mEnter the category: \033[00m").lower().capitalize()
+                    while not valid_string(category):
+                        print("\n\033[93mInvalid category. Please try again.")
+                        category = input("\033[94mEnter the category: \033[00m")
                     expenses = Expense.view_expense_by_category(category, user_id)
                     print("\n")
                     print(expenses)
@@ -105,10 +113,16 @@ while True:
             #for adding a new expense
             elif expense_choice == 2:
                 name = input("\033[94mWhat did you buy: \033[00m")
+                while not valid_string(name):
+                    print("\n\033[93mInvalid name. Please try again.")
+                    name = input("\033[94mWhat did you buy: \033[00m")
                 print("\033[94mWhat category was it ?\033[00m")
                 current_category = list(Expense.find_user_categories(user_id))
                 display_category(current_category)
                 category = input("\n\033[94mItem category: \033[00m").lower().capitalize()
+                while not valid_string(category):
+                    print("\n\033[93mInvalid category. Please try again.")
+                    category = input("\033[94mItem category: \033[00m")
                 while True:
                     try:
                         price = float(input("\n\033[94mHow much did you spend: \033[00m"))
@@ -145,6 +159,9 @@ while True:
                 else:
                     display_category(current_category)
                     category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
+                    while not valid_string(category):
+                        print("\n\033[93mInvalid category. Please try again.")
+                        category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
                     expenses = Expense.view_expense_by_category(category, user_id)
                     print("\n")
                     print(expenses)
@@ -173,7 +190,10 @@ while True:
                 Earnings.view_total_earnings(user_id)
                 view_specific = input("\n\033[94mWould you like to see the total earnings of a specific category? Y/N. \033[00m")
                 if view_specific.lower() == 'y':
-                    category = input("\033[94mEnter the category: \033[00m").lower().capitalize()
+                    category = input("\n\033[94mEnter the category: \033[00m").lower().capitalize()
+                    while not valid_string(category):
+                        print("\n\033[93mInvalid category. Please try again.")
+                        category = input("\033[94mEnter the category: \033[00m")
                     earnings = Earnings.view_earnings_by_category(category, user_id)   
                     print("\n")
                     print(earnings)         
@@ -181,10 +201,16 @@ while True:
             #for adding a new earning
             elif earning_choice == 2:
                 source = input("\033[94mWhat was the source of the earning: \033[00m")
+                while not valid_string(source):
+                    print("\n\033[93mInvalid Source. Please try again.\033[00m")
+                    start_date = input("\033[94mWhat was the source of the earning: \033[00m")
                 print("\033[94mWhat category was it ?")
                 current_category = list(Earnings.find_user_categories(user_id))
-                display_category(current_category)
+                display_category(category)
                 category = input("\n\033[94mItem category: \033[00m").lower().capitalize()
+                while not valid_string(category):
+                    print("\n\033[93mInvalid category. Please try again.\033[00m")
+                    start_date = input("\033[94mItem category: \033[00m")
                 while True:
                     try:
                         amount = float(input("\n\033[94mHow much did you earn: \033[00m"))
@@ -216,10 +242,13 @@ while True:
             elif earning_choice == 4:
                 current_category = list(Earnings.find_user_categories(user_id))
                 if current_category == []:
-                    print("You have nothing to remove")
+                    print("\033[93mYou have nothing to remove\033[00m")
                 else:
                     display_category(current_category)
                     category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
+                    while not valid_string(category):
+                        print("\n\033[93mInvalid category. Please try again.")
+                        category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
                     earnings = Earnings.view_earnings_by_category(category, user_id)   
                     print("\n")
                     print(earnings)
