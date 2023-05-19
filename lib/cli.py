@@ -148,8 +148,12 @@ while True:
                     expenses = Expense.view_expense_by_category(category, user_id)
                     print("\n")
                     print(expenses)
-                    id = int(input("\n\033[94mEnter the id of the expense to remove: \033[00m"))
+                    try:
+                        id = int(input("\n\033[94mEnter the id of the expense to remove: \033[00m"))
+                    except ValueError:
+                        id = input("\n\033[94mEnter the id of the expense to remove: \033[00m")
                     Expense.remove(id)
+                    print(f"\n\033[92mSuccessfully removed ID #{id}\033[00m")
 
         #view add or remove earnings
         elif choice == 2:
@@ -192,7 +196,7 @@ while True:
                 date = input("\n\033[94mEnter the date of the transaction (YYYY-MM-DD): \033[00m")
                 while not valid_date(date):
                     print("\033[93mInvalid date. Please try again.\033[00m")
-                    continue
+                    date = input("\n\033[94mEnter the date of the transaction (YYYY-MM-DD): \033[00m")
                 Earnings.create(source, category, amount, date, user_id)
             
             #for view earnings by date
@@ -212,15 +216,19 @@ while True:
             elif earning_choice == 4:
                 current_category = list(Earnings.find_user_categories(user_id))
                 if current_category == []:
-                    print("\033[93mYou have nothing to remove\033[00m")
+                    print("You have nothing to remove")
                 else:
                     display_category(current_category)
                     category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
                     earnings = Earnings.view_earnings_by_category(category, user_id)   
                     print("\n")
-                    print(earnings)  
-                    id = int(input("\n\033[94mEnter the id of the earning to remove: \033[00m"))
+                    print(earnings)
+                    try:
+                        id = int(input("\n\033[94mEnter the id of the earning to remove: \033[00m"))
+                    except ValueError:
+                        id = input("\n\033[94mEnter the id of the earning to remove: \033[00m")
                     Earnings.remove(id)
+                    print(f"\n\033[92mSuccessfully removed ID #{id}\033[00m")
 
         #compare between earnings and expenses
         elif choice == 3:
