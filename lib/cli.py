@@ -140,13 +140,16 @@ while True:
             #Removing an expense by id
             elif expense_choice == 4:
                 current_category = list(Expense.find_user_categories(user_id))
-                display_category(current_category)
-                category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
-                expenses = Expense.view_expense_by_category(category, user_id)
-                print("\n")
-                print(expenses)
-                id = int(input("\n\033[94mEnter the id of the expense to remove: \033[00m"))
-                Expense.remove(id)
+                if current_category == []:
+                    print("\033[93mYou have nothing to remove\033[00m")
+                else:
+                    display_category(current_category)
+                    category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
+                    expenses = Expense.view_expense_by_category(category, user_id)
+                    print("\n")
+                    print(expenses)
+                    id = int(input("\n\033[94mEnter the id of the expense to remove: \033[00m"))
+                    Expense.remove(id)
 
         #view add or remove earnings
         elif choice == 2:
@@ -208,13 +211,16 @@ while True:
             #remove earning by id
             elif earning_choice == 4:
                 current_category = list(Earnings.find_user_categories(user_id))
-                display_category(current_category)
-                category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
-                earnings = Earnings.view_earnings_by_category(category, user_id)   
-                print("\n")
-                print(earnings)  
-                id = int(input("\n\033[94mEnter the id of the earning to remove: \033[00m"))
-                Earnings.remove(id)
+                if current_category == []:
+                    print("\033[93mYou have nothing to remove\033[00m")
+                else:
+                    display_category(current_category)
+                    category = input("\n\033[94mEnter the category of the item you want to remove: \033[00m").lower().capitalize()
+                    earnings = Earnings.view_earnings_by_category(category, user_id)   
+                    print("\n")
+                    print(earnings)  
+                    id = int(input("\n\033[94mEnter the id of the earning to remove: \033[00m"))
+                    Earnings.remove(id)
 
         #compare between earnings and expenses
         elif choice == 3:
