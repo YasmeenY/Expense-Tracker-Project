@@ -62,7 +62,7 @@ def user_sign_in():
                     print("\033[91mSorry Password wrong 3 times Goodbye!\033[00m")
                     exit()
             
-        print(f"\n\n\033[95m\U0001F973 Hello {first_name} what would you like to do today?\U0001F973\n\033[00m")
+    print(f"\n\033[95m\U0001F973 Hello {first_name} what would you like to do today?\U0001F973\033[00m")
 
     global user_id
     user_id = Users.get_id(first_name, last_name)[0]
@@ -85,17 +85,17 @@ while True:
 
         #view add or remove expenses
         if choice == 1:
-            print("\n\n\033[91m1. View Total Expenses in each category")
+            print("\n\033[91m1. View Total Expenses in each category")
             print("2. Add New Expense")
             print("3. View Expenses By Date")
             print("4. Remove Expense\n\033[00m")
 
             expense_choice = int(input("\033[94mPick a Number: \033[00m"))
-            print("\n")
+            
 
             while expense_choice != 1 and expense_choice != 2 and expense_choice != 3 and expense_choice != 4:
                 expense_choice = int(input("\033[94mInvalid choice please choose again: \033[00m"))
-                print("\n")
+                
 
             #View total expenses and gets choice to view each item in a specific category
             if expense_choice == 1:
@@ -107,8 +107,11 @@ while True:
                         print("\n\033[93mInvalid category. Please try again.")
                         category = input("\033[94mEnter the category: \033[00m").lower().capitalize()
                     expenses = Expense.view_expense_by_category(category, user_id)
-                    print("\n")
                     print(expenses)
+                elif view_specific.lower() == 'n':
+                    continue
+                else:
+                    print("\n\033[91mInvalid choice\033[00m")
 
             #for adding a new expense
             elif expense_choice == 2:
@@ -136,7 +139,8 @@ while True:
                     print("\n\033[93mInvalid date. Please try again.")
                     date = input("\n\033[94mEnter the date of the transaction (YYYY-MM-DD): \033[00m")
                 Expense.create(name, category, price, date, user_id)
-                print("\n" + warn_user(user_id))
+                print(warn_user(user_id))
+                print("\n\033[92mSuccessfully added new expense!\033[00m")
 
             #View expenses by date
             elif expense_choice == 3:
@@ -174,7 +178,7 @@ while True:
 
         #view add or remove earnings
         elif choice == 2:
-            print("\n\n\033[92m1. View Total Earnings in each category")
+            print("\n\033[92m1. View Total Earnings in each category")
             print("2. Add New Earning")
             print("3. View Earnings By Date")
             print("4. Remove Earning\033[00m\n")
@@ -195,8 +199,11 @@ while True:
                         print("\n\033[93mInvalid category. Please try again.")
                         category = input("\033[94mEnter the category: \033[00m").lower().capitalize()
                     earnings = Earnings.view_earnings_by_category(category, user_id)   
-                    print("\n")
-                    print(earnings)         
+                    print(earnings) 
+                elif view_specific.lower() == 'n':
+                    continue
+                else:
+                    print("\n\033[91mInvalid choice\033[00m")       
 
             #for adding a new earning
             elif earning_choice == 2:
@@ -206,7 +213,7 @@ while True:
                     source = input("\033[94mWhat was the source of the earning: \033[00m")
                 print("\033[94mWhat category was it ?")
                 current_category = list(Earnings.find_user_categories(user_id))
-                display_category(category)
+                display_category(current_category)
                 category = input("\n\033[94mItem category: \033[00m").lower().capitalize()
                 while not valid_string(category):
                     print("\n\033[93mInvalid category. Please try again.\033[00m")
@@ -224,6 +231,7 @@ while True:
                     print("\033[93mInvalid date. Please try again.\033[00m")
                     date = input("\n\033[94mEnter the date of the transaction (YYYY-MM-DD): \033[00m")
                 Earnings.create(source, category, amount, date, user_id)
+                print("\n\033[92mSuccessfully added new earning!\033[00m")
             
             #for view earnings by date
             elif earning_choice == 3:
@@ -264,7 +272,7 @@ while True:
             print(compare(user_id))
         #change user
         elif choice == 4:
-            print("\n\n\n\033[92m---Changing User---\033[00m\n")
+            print("\n\033[92m---Changing User---\033[00m\n")
             user_sign_in()
         #deletes user
         elif choice == 5:

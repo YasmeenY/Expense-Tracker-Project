@@ -49,7 +49,8 @@ class Expense:
                 table.rows.append([expense[0], expense[1], f"${expense[3]}", expense[4]])
             return table
         else:
-            print(f"\nNo expenses found in the {category} category.\n")
+            return(f"\nNo expenses found in the {category} category.")
+            
 
     @classmethod
     def find_user_categories(cls, user_id):

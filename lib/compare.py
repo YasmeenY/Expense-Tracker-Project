@@ -39,4 +39,6 @@ def warn_user(user_id):
         return f"\033[91mUh oh! Your expenses exceed your earnings. {earnings - expenses} Time to start saving!\033[00m\U0001F641"
     elif expenses == earnings:
         return f"\033[93mBe careful You've spent as much as You've made. Total savings is 0\033[00m\U0001F630"
+    else:
+        return ("")
 
