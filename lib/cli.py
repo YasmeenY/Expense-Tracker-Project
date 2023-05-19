@@ -105,7 +105,7 @@ while True:
                     category = input("\n\033[94mEnter the category: \033[00m").lower().capitalize()
                     while not valid_string(category):
                         print("\n\033[93mInvalid category. Please try again.")
-                        category = input("\033[94mEnter the category: \033[00m")
+                        category = input("\033[94mEnter the category: \033[00m").lower().capitalize()
                     expenses = Expense.view_expense_by_category(category, user_id)
                     print("\n")
                     print(expenses)
@@ -122,7 +122,7 @@ while True:
                 category = input("\n\033[94mItem category: \033[00m").lower().capitalize()
                 while not valid_string(category):
                     print("\n\033[93mInvalid category. Please try again.")
-                    category = input("\033[94mItem category: \033[00m")
+                    category = input("\033[94mItem category: \033[00m").lower().capitalize()
                 while True:
                     try:
                         price = float(input("\n\033[94mHow much did you spend: \033[00m"))
@@ -193,7 +193,7 @@ while True:
                     category = input("\n\033[94mEnter the category: \033[00m").lower().capitalize()
                     while not valid_string(category):
                         print("\n\033[93mInvalid category. Please try again.")
-                        category = input("\033[94mEnter the category: \033[00m")
+                        category = input("\033[94mEnter the category: \033[00m").lower().capitalize()
                     earnings = Earnings.view_earnings_by_category(category, user_id)   
                     print("\n")
                     print(earnings)         
@@ -203,14 +203,14 @@ while True:
                 source = input("\033[94mWhat was the source of the earning: \033[00m")
                 while not valid_string(source):
                     print("\n\033[93mInvalid Source. Please try again.\033[00m")
-                    start_date = input("\033[94mWhat was the source of the earning: \033[00m")
+                    source = input("\033[94mWhat was the source of the earning: \033[00m")
                 print("\033[94mWhat category was it ?")
                 current_category = list(Earnings.find_user_categories(user_id))
                 display_category(category)
                 category = input("\n\033[94mItem category: \033[00m").lower().capitalize()
                 while not valid_string(category):
                     print("\n\033[93mInvalid category. Please try again.\033[00m")
-                    start_date = input("\033[94mItem category: \033[00m")
+                    category = input("\n\033[94mItem category: \033[00m").lower().capitalize()
                 while True:
                     try:
                         amount = float(input("\n\033[94mHow much did you earn: \033[00m"))
