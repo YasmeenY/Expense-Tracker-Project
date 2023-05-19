@@ -44,7 +44,7 @@ class Expense:
         table = BeautifulTable()
         table.columns.header = ["ID", "Name", "Price", "Date"]
         if expenses:
-            print(f"Expenses in the {category} category:")
+            print(f"\nExpenses in the {category} category:")
             for expense in expenses:
                 table.rows.append([expense[0], expense[1], f"${expense[3]}", expense[4]])
             return table

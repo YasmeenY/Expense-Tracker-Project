@@ -177,14 +177,6 @@ while True:
                 print("\033[94mWhat category was it ?")
                 current_category = list(Earnings.find_user_categories(user_id))
                 display_category(current_category)
-                if current_category != [] and len(current_category) != 1:
-                    print ('\033[94mYour current categories are '+', '.join(current_category[:-1]) + ' & ' + current_category[-1] + "\033[00m")
-                elif len(current_category) == 2:
-                    print ('\033[94mYour current categories are '+ " & ".join(current_category) + "\033[00m")
-                elif len(current_category) == 1:
-                    print("\033[94m" + "".join(current_category) + "\033[00m")
-                else:
-                    print("\033[94mYou currently have no categories\033[00m")
                 category = input("\n\033[94mItem category: \033[00m").lower().capitalize()
                 while True:
                     try:

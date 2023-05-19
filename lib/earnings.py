@@ -44,7 +44,7 @@ class Earnings:
         table = BeautifulTable()
         table.columns.header = ["ID", "Source", "Amount", "Date"]
         if earnings:
-            print(f"Earnings in the {category} category:")
+            print(f"\nEarnings in the {category} category:")
             for earning in earnings:
                 table.rows.append([earning[0], earning[1], f"${earning[3]}", earning[4]])
             return table
