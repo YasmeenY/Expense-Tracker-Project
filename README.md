@@ -24,9 +24,11 @@ Comparing between expenses and earnings
 ![Screenshot 2023-08-01 084438](https://github.com/YasmeenY/Expense-Tracker-Project/assets/90418738/b2a5408a-da47-434c-9b5d-cccebe94b147)
 
 Expenses Menu
+
 ![Screenshot 2023-08-01 084523](https://github.com/YasmeenY/Expense-Tracker-Project/assets/90418738/e16145ce-9975-4ee9-a622-b58676a43f9e)
 
 Earnings Menu
+
 ![Screenshot 2023-08-01 084733](https://github.com/YasmeenY/Expense-Tracker-Project/assets/90418738/a4ba762d-3672-4688-83c4-79673d46c915)
 
 Viewing current user expenses
